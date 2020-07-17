@@ -1,26 +1,26 @@
 {
-  "name": "scp_zh_tr_data_former",
-  "version": "1.0.0",
-  "description": "A simple tool to scrap and form datas to xlsx, json, or txt",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-	"build": "pkg index.js"
-  },
-  "pkg": {
-	"assests": [
-		"scripts/**/*"
-	],
-	"targets": [
-		"node8"
-	]
-  },
-  "author": "ChAoS_UnItY",
-  "license": "MIT",
-  "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "got": "^11.5.0",
-    "pkg": "^4.4.9",
-    "xlsx": "^0.16.3"
-  }
+ "name": "scp_zh_tr_data_former",
+ "version": "1.0.0",
+ "description": "A simple tool to scrap and form datas to xlsx, json, or txt",
+ "main": "index.js",
+ "scripts": {
+  "start": "node index.js",
+  "build": "pkg index.js"
+ },
+ "pkg": {
+  "assests": [
+   "scripts/**/*"
+  ],
+  "targets": [
+   "node8"
+  ]
+ },
+ "author": "ChAoS_UnItY",
+ "license": "MIT",
+ "dependencies": {
+  "cheerio": "^1.0.0-rc.3",
+  "got": "^11.5.0",
+  "pkg": "^4.4.9",
+  "xlsx": "^0.16.3"
+ }
 }
