@@ -3,6 +3,8 @@
 ---
 A simple data former includes web scraper.  
 簡易的數據整合程式內含爬蟲程序。  
+
+### 下方資料已過期，請至Release下載程式 <br> Infos below is outdated, please head to Release Page.
 ```
 scp-zh-tr-data-former-master
 └── scp-zh-tr-data-former-master
