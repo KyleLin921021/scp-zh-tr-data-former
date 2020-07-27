@@ -2,10 +2,9 @@
 
 const got = require("got");
 const cheerio = require("cheerio");
-const fs = require("fs");
-const xlsx = require("xlsx");
 
 const langHelper = require("./scripts/langHelper");
+const fileWriter = require("./scripts/fileWriter");
 const { isNull } = require("util");
 const dir = "./gen";
 
@@ -35,8 +34,7 @@ if (isNull(mode)) mode = "json";
 if (isNull(langPkg)) langPkg = langHelper.getLang("en-us");
 
 //date init
-let d = new Date;
-let month = d.toLocaleString(langPkg[4][0], { month: "long" });
+let d = new Date();
 let mmddyyyy = `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getFullYear()}`;
 
 //main process
@@ -71,25 +69,25 @@ let mmddyyyy = `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 
     }
     for (let i = 0, m = langPkg[0]; i < 6; i++) {
         $(`div.total-track > table > tbody > tr:nth-child(${i + 2})`).find("p").slice(0).each((index, element) => {
-            let text = $(element).text();
+            let t = $(element).text();
             switch (i) {
                 case 0:
-                    orgs[m[index]] = text;
+                    orgs[m[index]] = t;
                     break;
                 case 1:
-                    trans[m[index]] = text;
+                    trans[m[index]] = t;
                     break;
                 case 2:
-                    scps[m[index]] = text;
+                    scps[m[index]] = t;
                     break;
                 case 3:
-                    gois[m[index]] = text;
+                    gois[m[index]] = t;
                     break;
                 case 4:
-                    tales[m[index]] = text;
+                    tales[m[index]] = t;
                     break;
                 case 5:
-                    hubs[m[index]] = text;
+                    hubs[m[index]] = t;
                     break;
                 default:
                     break;
@@ -97,40 +95,15 @@ let mmddyyyy = `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 
         });
     }
     let fileName = `${dir}/SCP-ZH-TR_Datas_${mmddyyyy}_${langPkg[4][0]}.${mode}`;
-    switch (mode) {
-        case "xlsx":
-            
-            let arr = [];
-            for (let i = 0, m = langPkg[0]; i < 12; i++) {
-                let obj = {};
-                obj[langPkg[3][0]] = m[i];
-                obj[langPkg[1][0]] = orgs[m[i]];
-                obj[langPkg[1][1]] = trans[m[i]];
-                obj[langPkg[1][2]] = scps[m[i]];
-                obj[langPkg[1][3]] = gois[m[i]];
-                obj[langPkg[1][4]] = tales[m[i]];
-                obj[langPkg[1][5]] = hubs[m[i]];
-                arr.push(obj);
-            }
-            var ws = xlsx.utils.json_to_sheet(arr);
-            var wb = xlsx.utils.book_new();
-            xlsx.utils.book_append_sheet(wb, ws, "Main");
+    let categories = [];
+    categories[0] = orgs;
+    categories[1] = trans;
+    categories[2] = scps;
+    categories[3] = gois;
+    categories[4] = tales;
+    categories[5] = hubs;
 
-            xlsx.writeFile(wb, fileName);
-            break;
-        case "json":
-            let jsonFile = { _createAt: month, _credit: langPkg[2][0], orgs, trans, scps, gois, tales, hubs };
-            let data = JSON.stringify(jsonFile, null, 2);
-
-            if (!fs.existsSync(dir)) {
-                fs.mkdirSync(dir);
-            }
-            fs.writeFileSync(fileName, data);
-            break;
-        case "txt":
-        default:
-            break;
-    }
+    fileWriter.mode[mode](langPkg, fileName, categories);;
     console.log(`=========================================================================\nSuccessfully Generated File!\nIn ${fileName}\n=========================================================================`);
     setTimeout(() => {
         console.log("\n\nProgress End. Closing......\n\n");
